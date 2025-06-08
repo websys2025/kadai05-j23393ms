@@ -4,17 +4,31 @@
     <title>演習課題5-2：外部APIの呼び出しテスト</title>
 </head>
 <body>
-    <h1 id="msg">何かのAPI</h1>
+    <h1 id="msg">気象庁の天気予報のAPI</h1>
     <form name="apiform"><p>
-        何かのフォーム：<input type="text" name="form_data">
+        地域コード：<input type="text" name="form_data">
         <button type="button" id="btn1" onclick="some_api(this.form)">実行</button>
     </p></form>
-    
+
+    <table border="1">
+        <tr><th>地域名</th><th>地域コード</th></tr>
+        <tr><td>東京</td><td>130000</td></tr>
+        <tr><td>千葉</td><td>120000</td></tr>
+        <tr><td>大阪</td><td>270000</td></tr>
+        <tr><td>北海道（札幌）</td><td>016000</td></tr>
+        <tr><td>名古屋</td><td>230000</td></tr>
+        <tr><td>福岡</td><td>400000</td></tr>
+        <tr><td>那覇</td><td>471000</td></tr>
+    </table>
+   
     <div id="result"></div>
     <script>
         async function some_api(myForm) {
             // ここにコードを書く
-            document.getElementById("result").innerHTML += myForm.form_data.value+"<br />";
+            const areaCode = myForm.form_data.value;
+            const res = await fetch(`https://www.jma.go.jp/bosai/forecast/data/overview_forecast/${areaCode}.json`);
+            const data = await res.json();
+            document.getElementById("result").innerHTML = `<h3>${data.reportDatetime}</h3><p>${data.text}</p>`;
             document.apiform.reset();
         }
     </script>
